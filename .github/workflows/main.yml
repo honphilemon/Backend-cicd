@@ -4,6 +4,15 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+  actions: write
 
 jobs:
   build:
@@ -47,3 +56,4 @@ jobs:
       run: |
         kubectl set image deployment/your-deployment-name your-container-name=backend:${{ github.sha }} --namespace=default || exit 1
         kubectl rollout status deployment/your-deployment-name --namespace=default || exit 1
+
