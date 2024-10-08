@@ -14,6 +14,9 @@ permissions:
   packages: write
   actions: write
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -56,4 +59,3 @@ jobs:
       run: |
         kubectl set image deployment/your-deployment-name your-container-name=backend:${{ github.sha }} --namespace=default || exit 1
         kubectl rollout status deployment/your-deployment-name --namespace=default || exit 1
-
