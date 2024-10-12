@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: privileged-deployment
+  namespace: elevated-privileges  # Use a dedicated namespace for risky workloads
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: privileged-app
+  template:
+    metadata:
+      labels:
+        app: privileged-app
+    spec:
+      containers:
+      - name: privileged-container
+        image: your-docker-image:latest  # Replace with your pre-built image
+        securityContext:
+          privileged: true                # Grants full host access
+          allowPrivilegeEscalation: true   # Allows the process to escalate privileges
+          capabilities:
+            add:
+            - SYS_ADMIN                   # Add necessary capabilities for system-level operations
+          runAsUser: 0                    # Run as root user (UID 0)
+          runAsGroup: 0                   # Run as root group (GID 0)
+        volumeMounts:
+        - mountPath: /host                 # Inside the container, this will be the mount point
+          name: host-volume                # Name of the volume for host filesystem access
+          readOnly: false                  # Ensure it's writable if you intend to modify host files
+      volumes:
+      - name: host-volume
+        hostPath:
+          path: /                         # Mount the root directory of the host (or a specific path)
+          type: Directory
