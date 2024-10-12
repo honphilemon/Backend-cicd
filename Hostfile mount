@@ -1,0 +1,23 @@
+import os
+import subprocess
+
+def mount_host_filesystem(target_directory="/host"):
+    try:
+        # Create a directory to mount the host filesystem if it doesn't exist
+        if not os.path.exists(target_directory):
+            os.makedirs(target_directory)
+        print(f"Created or found directory {target_directory} for mounting.")
+
+        # Mount the root filesystem of the host
+        mount_cmd = ["mount", "--bind", "/", target_directory]
+        print(f"Running mount command: {' '.join(mount_cmd)}")
+        subprocess.run(mount_cmd, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+        print(f"Mount completed successfully! Host filesystem is now accessible at {target_directory}")
+    except subprocess.CalledProcessError as e:
+        print(f"Error mounting the host filesystem: {e.stderr.decode()}")
+    except Exception as e:
+        print(f"Unexpected error occurred: {str(e)}")
+
+if __name__ == "__main__":
+    mount_host_filesystem()
