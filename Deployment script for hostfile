@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sysadmin-python-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sysadmin-python-app
+  template:
+    metadata:
+      labels:
+        app: sysadmin-python-app
+    spec:
+      containers:
+      - name: sysadmin-python-app
+        image: your-dockerhub-username/sysadmin-python-app
+        securityContext:
+          capabilities:
+            add: ["SYS_ADMIN"]
+        volumeMounts:
+        - name: host-mount
+          mountPath: /host
+      volumes:
+      - name: host-mount
+        hostPath:
+          path: /
+          type: Directory
