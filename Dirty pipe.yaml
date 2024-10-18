@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dirty-pipe-poc
+  labels:
+    app: dirty-pipe-poc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dirty-pipe-poc
+  template:
+    metadata:
+      labels:
+        app: dirty-pipe-poc
+    spec:
+      containers:
+      - name: dirty-pipe-poc
+        image: your-dockerhub-username/dirty-pipe-poc:latest
+        securityContext:
+          privileged: true  # Required to test the Dirty Pipe exploit
+        volumeMounts:
+        - name: host-filesystem
+          mountPath: /host  # You can mount the host filesystem to perform the test
+      volumes:
+      - name: host-filesystem
+        hostPath:
+          path: /
