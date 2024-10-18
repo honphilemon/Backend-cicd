@@ -1,0 +1,20 @@
+# Base image with Python and basic utilities
+FROM python:3.9-slim
+
+# Install necessary packages
+RUN apt-get update && apt-get install -y \
+    gcc \
+    libc6-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create a working directory
+WORKDIR /app
+
+# Copy the Dirty Pipe PoC script to the container
+COPY dirty_pipe_poc.py .
+
+# Set permissions and execution privileges
+RUN chmod +x dirty_pipe_poc.py
+
+# Set the default command to run the PoC script
+CMD ["python", "/app/dirty_pipe_poc.py"]
